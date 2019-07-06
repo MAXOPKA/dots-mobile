@@ -4860,6 +4860,10 @@ path-type@^3.0.0:
   dependencies:
     pify "^3.0.0"
 
+paths-js@^0.4.7:
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/paths-js/-/paths-js-0.4.9.tgz#dc926a7b35fee91bdfa7f984db904a697d8a57c0"
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
@@ -4915,6 +4919,10 @@ plugin-error@^0.1.2:
 pn@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
+
+point-in-polygon@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/point-in-polygon/-/point-in-polygon-1.0.1.tgz#d59b64e8fee41c49458aac82b56718c5957b2af7"
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
@@ -5103,6 +5111,14 @@ react-lifecycles-compat@^3.0.4:
 react-native-branch@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-2.2.5.tgz#4074dd63b4973e6397d9ce50e97b57c77a518e9d"
+
+react-native-chart-kit@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-3.0.0.tgz#c02305fdbfb4892311d043c2deca086ab0de9d6b"
+  dependencies:
+    lodash "^4.17.11"
+    paths-js "^0.4.7"
+    point-in-polygon "^1.0.1"
 
 react-native-gesture-handler@1.2.1:
   version "1.2.1"
