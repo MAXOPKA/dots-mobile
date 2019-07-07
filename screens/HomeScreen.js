@@ -1,5 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Image,
   Platform,
@@ -9,92 +9,147 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
 import { MonoText } from '../components/StyledText';
+import DatePicker from 'react-native-datepicker';
+import Modal from 'react-native-modal';
+import { Ionicons } from '@expo/vector-icons';
+import Route from '../components/Route/Route.js';
+import RoutesList from '../components/RoutesList/RoutesList.js';
 
-export default function HomeScreen() {
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
+const busPoints = {
+  direct: [
+    { name: 'Площадь памяти', count: 12 },
+    { name: 'Буратино', count: 15 },
+    { name: 'Тульская', count: 2 },
+    { name: 'ДК Строитель', count: 2 },
+    { name: 'Пермякова', count: 6 },
+    { name: 'ТЦ Солнечный', count: 45 },
+    { name: 'Широтная', count: 13 },
+    { name: 'Олимпийская', count: 4 },
+    { name: 'Сквер ВДВ', count: 0 },
+    { name: 'Сквер труженников тыла', count: 3 },
+  ],
+  reverse: [
+    { name: 'Сквер ВДВ', count: 0 },
+    { name: 'Сквер труженников тыла', count: 3 },
+    { name: 'Тульская', count: 23 },
+    { name: 'ДК Строитель', count: 54 },
+    { name: 'Пермякова', count: 23 },
+    { name: 'ТЦ Солнечный', count: 11 },
+    { name: 'Площадь памяти', count: 11 },
+    { name: 'Буратино', count: 12 },
+    { name: 'Широтная', count: 0 },
+    { name: 'Олимпийская', count: 0 },
 
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
+  ]
+}
 
-          <Text style={styles.getStartedText}>Get started by opening</Text>
+export default class HomeScreen extends Component {
+  static routes = [
+    { id: 1, name: '30' },
+    { id: 2, name: '7Б' },
+    { id: 3, name: '7П' },
+    { id: 4, name: '25' },
+  ];
 
-          <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentRouteId: 1,
+      dateDiff: '07-07-2019',
+      routeSelectModalIsOpen: false,
+      datePickerModalIsOpen: false,
+    }
+  }
 
-          <Text style={styles.getStartedText}>
-            Change this text and your app will automatically reload.
+  showDatePickerModal = () => {}
+
+  showDatePickerModal = () => this.setState(previousState => ({datePickerModalIsOpen: true}));
+
+  hideDatePickerModal = () => this.setState(previousState => ({datePickerModalIsOpen: false}));
+
+  showRoutesModal = () => this.setState(previousState => ({routeSelectModalIsOpen: true}));
+
+  hideRoutesModal = () => this.setState(previousState => ({routeSelectModalIsOpen: false}));
+
+  getCurrentRoute = () => HomeScreen.routes.find(route => route.id == this.state.currentRouteId)
+
+  renderCloseModalButton = modalName => (
+    <TouchableOpacity style={styles.closeButton} onPress={() => this.toggleModal(modalName)} >
+      <Ionicons
+        name={'md-close'}
+        size={26}
+        style={{ marginBottom: -3 }}
+        color={'#ffffff'}
+      />
+    </TouchableOpacity>
+  );
+
+  renderRoutePickerModal = () => (
+    <Modal isVisible={this.state.routeSelectModalIsOpen} >
+      <View style={styles.modalContentContainer} >
+        <RoutesList
+          selectedBusId={this.state.currentRouteId}
+          setRoute={
+            routeId => this.setState(previousState => ({currentRouteId: routeId, routeSelectModalIsOpen: false}))
+          }
+        />
+      </View>
+    </Modal>
+  );
+
+  toggleModal = modalName => {
+    let newState = {};
+
+    this.setState(previousState => {
+      newState[`${modalName}IsOpen`] = !previousState[`${modalName}IsOpen`];
+      return (newState);
+    });
+  }
+
+  renderHeader = () => (
+    <View style={styles.headerContainer} >
+      <View style={styles.toolbar} >
+        <TouchableOpacity onPress={this.showRoutesModal} >
+          <Text style={styles.touchableTitle}  >
+            {`Маршрут ${this.getCurrentRoute().name}`}
           </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Help, it didn’t automatically reload!
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
+        </TouchableOpacity>
+      </View>
+      <View style={styles.datesBlock} >
+        <Text style={styles.title} >
+          Сейчас
         </Text>
-
-        <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>
-            navigation/MainTabNavigator.js
-          </MonoText>
-        </View>
+        <TouchableOpacity onPress={this.showDatePickerModal} >
+          <Text style={styles.touchableTitle} >
+            {this.state.dateDiff}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
+
+  render() {
+    return (
+      <View style={styles.container}>
+        {this.renderHeader()}
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.contentContainer}>
+          <Route
+            points={busPoints.direct} withBus={true}
+            navigation={this.props.navigation}
+          />
+        </ScrollView>
+        {this.renderRoutePickerModal()}
+      </View>
+    );
+  }
 }
 
 HomeScreen.navigationOptions = {
   header: null,
 };
-
-function DevelopmentModeNotice() {
-  if (__DEV__) {
-    const learnMoreButton = (
-      <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-        Learn more
-      </Text>
-    );
-
-    return (
-      <Text style={styles.developmentModeText}>
-        Development mode is enabled: your app will be slower but you can use
-        useful development tools. {learnMoreButton}
-      </Text>
-    );
-  } else {
-    return (
-      <Text style={styles.developmentModeText}>
-        You are not in development mode: your app will run at full speed.
-      </Text>
-    );
-  }
-}
 
 function handleLearnMorePress() {
   WebBrowser.openBrowserAsync(
@@ -112,87 +167,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: 30,
+    paddingHorizontal: 24,
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
+  scrollView: {
+    flex: 1,
   },
   contentContainer: {
-    paddingTop: 30,
+
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
+  headerContainer: {
+    height: 64,
   },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
+  datesBlock: {
+    flex: 1,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
+  touchableTitle: {
+    color: '#2f95dc',
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
+    fontWeight: 'bold',
   },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
+  title: {
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
+    fontWeight: 'bold',
   },
-  navigationFilename: {
-    marginTop: 5,
+  toolbar: {
+    flex: 1,
   },
-  helpContainer: {
-    marginTop: 15,
+  modalContentContainer: {
+    flex: 1,
     alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
   },
 });
