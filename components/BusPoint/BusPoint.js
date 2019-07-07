@@ -5,11 +5,12 @@ export default class BusPoint extends Component {
   static defaultProps = {
     maxCount: 0,
     withTitle: true,
+    isActive: true,
   }
 
   getColors = () => {
     return {
-      unknown: "#828282",
+      unknown: "#d2f2d2",
       empty: "#95f642",
       halfEmpty: "#f6c342",
       full: "#f69042",
@@ -18,7 +19,7 @@ export default class BusPoint extends Component {
   }
 
   detectCircleColor = () => {
-    if (this.props.point.count == 0 || this.props.maxCount == 0) { return this.getColors().unknown }
+    if ((!this.props.isActive && this.props.withTitle) || this.props.maxCount == 0) { return this.getColors().unknown }
 
     var percent = this.props.point.count * 100 / this.props.maxCount
 
@@ -39,7 +40,7 @@ export default class BusPoint extends Component {
       <View style={styles.busPoint} >
         <View style={{...styles.busPointCircle, backgroundColor: this.detectCircleColor()}} >
           <Text style={styles.busPointCircleTitle} >
-            {this.props.point.count}
+            {(!!this.props.isActive || !this.props.withTitle) && this.props.point.count}
           </Text>
         </View>
         {!!this.props.withTitle && this.renderTitle()}

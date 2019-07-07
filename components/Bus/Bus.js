@@ -8,7 +8,6 @@ export default class Bus extends Component {
 
   getColors = () => {
     return {
-      unknown: "#828282",
       empty: "#95f642",
       halfEmpty: "#f6c342",
       full: "#f69042",
@@ -17,7 +16,10 @@ export default class Bus extends Component {
   }
 
   detectColor = () => {
-    return this.getColors().overflow
+    if (this.props.count < 5) { return this.getColors().empty; }
+    if (this.props.count < 10) { return this.getColors().halfEmpty; }
+    if (this.props.count < 35) { return this.getColors().full; }
+    if (this.props.count >= 35) { return this.getColors().overflow; }
   }
 
   render() {
@@ -49,6 +51,7 @@ const styles = StyleSheet.create({
     bottom: 15,
   },
   busTitle: {
+    textAlign: 'center',
     color: '#ffffff',
   },
 });

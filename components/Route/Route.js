@@ -9,7 +9,6 @@ import Bus from '../Bus/Bus';
 export default class Route extends Component {
   static defaultProps = {
     points: [],
-    currentPosition: 4,
     withBus: false,
     bus: { id: 1, photo: "" },
     imageSource: require("../../assets/images/photos/busCamera.jpg"),
@@ -32,6 +31,7 @@ export default class Route extends Component {
   renderPoints = (withTitles = true) =>
     this.props.points.map((point, index) =>
       <BusPoint
+        isActive={this.props.route.currentPosition < index}
         withTitle={withTitles}
         maxCount={this.getMaxCount()}
         point={point}
@@ -97,9 +97,9 @@ export default class Route extends Component {
     </Modal>
   );
 
-  getRouteHeight = () => this.props.points.length * Route.rowHeight;
+  getRouteHeight = () => (this.props.points.length - 1) * Route.rowHeight;
 
-  getBusTopPosition = () => this.props.currentPosition * Route.rowHeight + Route.busOffset;
+  getBusTopPosition = () => this.props.route.currentPosition * Route.rowHeight + Route.busOffset;
 
   toggleModal = modalName => {
     let newState = {};
@@ -116,7 +116,9 @@ export default class Route extends Component {
       <TouchableOpacity
         onPress={ () => this.toggleModal('photoModal') }
       >
-        <Bus />
+        <Bus
+          count={this.props.route.count}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -154,10 +156,10 @@ const styles = StyleSheet.create({
   },
   routeLine: {
     left: 7,
+    top: 8,
     position: 'absolute',
     width: 16,
     backgroundColor: "#3293c5",
-    borderRadius: 8,
   },
   busContainer: {
     position: 'absolute',

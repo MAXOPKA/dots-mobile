@@ -17,7 +17,7 @@ import Route from '../components/Route/Route.js';
 import RoutesList from '../components/RoutesList/RoutesList.js';
 
 const busPoints = {
-  direct: [
+  1: [
     { name: 'Площадь памяти', count: 12 },
     { name: 'Буратино', count: 15 },
     { name: 'Тульская', count: 2 },
@@ -29,7 +29,41 @@ const busPoints = {
     { name: 'Сквер ВДВ', count: 0 },
     { name: 'Сквер труженников тыла', count: 3 },
   ],
-  reverse: [
+  2: [
+    { name: 'Бабарынка', count: 0 },
+    { name: 'Сквер труженников тыла', count: 3 },
+    { name: 'Тульская', count: 23 },
+    { name: 'ДК Нефтяник', count: 54 },
+    { name: 'Пермякова', count: 23 },
+    { name: 'ТЦ Солнечный', count: 11 },
+    { name: 'Площадь памяти', count: 11 },
+    { name: 'Одесская', count: 12 },
+    { name: 'Широтная', count: 0 },
+    { name: 'Лесопарковая', count: 0 },
+  ],
+  3: [
+    { name: 'Площадь памяти', count: 12 },
+    { name: 'Буратино', count: 15 },
+    { name: 'Тульская', count: 2 },
+    { name: 'ДК Строитель', count: 2 },
+    { name: '50 лет чего-то там', count: 6 },
+    { name: 'ТЦ Кристалл', count: 45 },
+    { name: 'Широтная', count: 13 },
+    { name: 'Олимпийская', count: 4 },
+    { name: 'Сквер ВДВ', count: 0 },
+    { name: 'Сквер труженников тыла', count: 3 },
+    { name: 'Площадь памяти', count: 12 },
+    { name: 'Буратино', count: 15 },
+    { name: 'Тульская', count: 2 },
+    { name: 'ДК Строитель', count: 2 },
+    { name: '50 лет чего-то там', count: 6 },
+    { name: 'ТЦ Кристалл', count: 45 },
+    { name: 'Широтная', count: 13 },
+    { name: 'Олимпийская', count: 4 },
+    { name: 'Сквер ВДВ', count: 0 },
+    { name: 'Сквер труженников тыла', count: 3 },
+  ],
+  4: [
     { name: 'Сквер ВДВ', count: 0 },
     { name: 'Сквер труженников тыла', count: 3 },
     { name: 'Тульская', count: 23 },
@@ -40,16 +74,15 @@ const busPoints = {
     { name: 'Буратино', count: 12 },
     { name: 'Широтная', count: 0 },
     { name: 'Олимпийская', count: 0 },
-
   ]
 }
 
 export default class HomeScreen extends Component {
   static routes = [
-    { id: 1, name: '30' },
-    { id: 2, name: '7Б' },
-    { id: 3, name: '7П' },
-    { id: 4, name: '25' },
+    { id: 1, name: '30', count: 3, currentPosition: 3 },
+    { id: 2, name: '7Б', count: 32, currentPosition: 4},
+    { id: 3, name: '7П', count: 14, currentPosition: 7},
+    { id: 4, name: '25', count: 50, currentPosition: 2},
   ];
 
   constructor(props) {
@@ -137,7 +170,8 @@ export default class HomeScreen extends Component {
           style={styles.scrollView}
           contentContainerStyle={styles.contentContainer}>
           <Route
-            points={busPoints.direct} withBus={true}
+            route={this.getCurrentRoute()}
+            points={busPoints[this.state.currentRouteId]} withBus={true}
             navigation={this.props.navigation}
           />
         </ScrollView>
